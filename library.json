@@ -18,5 +18,7 @@
   "dependencies": {},
   "frameworks": "Arduino",
   "platforms": "*",
-  "libLDFmode": "off"
+  "build": {
+    "libLDFMode": "off"
+  }
 }
