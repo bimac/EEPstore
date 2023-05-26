@@ -21,6 +21,7 @@ REVISION HISTORY
 version 1.0.0   initial release (thank you: Florian Uekermann)
 version 1.0.1   default address: 0
 version 1.0.2   reorganize, relicense & publish as library
+version 1.0.3   fix compatibility with Arduino registry
 
 _______________________________________________________________________________
 */

@@ -1,6 +1,6 @@
 {
   "name": "EEPstore",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "EEPROM data storage with CRC16 checksum",
   "keywords": "EEPROM, CRC, storage",
   "repository": {
