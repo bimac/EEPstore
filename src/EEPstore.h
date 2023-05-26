@@ -37,7 +37,7 @@ template <class T> class EEPstore {
   EEPstore(const T &dataRef) : data(dataRef), crc(calcCRC()) {}
 
   uint16_t calcCRC() {
-    uint16_t out = 0;
+    uint16_t out         = 0;
     const uint8_t *bytes = (uint8_t *)&data;
     for (size_t i = 0; i < sizeof(T); i++) {
       out = _crc16_update(out, bytes[i]);
@@ -49,22 +49,28 @@ template <class T> class EEPstore {
   const uint16_t crc;
 
 public:
-  static void getOrDefault(T &dataRef, const uint16_t address = 0) {
+  static inline bool getIfValid(T &dataRef, const uint16_t address = 0) {
     EEPstore<T> storage(dataRef);
     EEPROM.get(address, storage);
-    if (storage.crc == storage.calcCRC()) {
+    bool valid = storage.crc == storage.calcCRC();
+    if (valid) {
       dataRef = storage.data;
-    } else {
-      defaults(dataRef);
     }
+    return valid;
   }
 
-  static void set(const T &dataRef, const uint16_t address = 0) {
+  static inline bool getOrDefault(T &dataRef, const uint16_t address = 0) {
+    bool valid = getIfValid(dataRef, address);
+    if (!valid) {
+      defaults(dataRef);
+    }
+    return valid;
+  }
+
+  static inline void set(const T &dataRef, const uint16_t address = 0) {
     EEPstore<T> storage(dataRef);
     EEPROM.put(address, storage);
   }
 
-  static inline __attribute__((always_inline)) void defaults(T &dataRef) {
-    new (dataRef) T;
-  }
+  static inline void defaults(T &dataRef) { new (&dataRef) T; }
 };
