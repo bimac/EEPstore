@@ -49,18 +49,22 @@ template <class T> class EEPstore {
   const uint16_t crc;
 
 public:
-  static void get(T &dataRef, const uint16_t address = 0) {
+  static void getOrDefault(T &dataRef, const uint16_t address = 0) {
     EEPstore<T> storage(dataRef);
     EEPROM.get(address, storage);
     if (storage.crc == storage.calcCRC()) {
       dataRef = storage.data;
     } else {
-      EEPstore<T>::set(dataRef, address);
+      defaults(dataRef);
     }
   }
 
   static void set(const T &dataRef, const uint16_t address = 0) {
     EEPstore<T> storage(dataRef);
     EEPROM.put(address, storage);
+  }
+
+  static inline __attribute__((always_inline)) void defaults(T &dataRef) {
+    new (dataRef) T;
   }
 };
