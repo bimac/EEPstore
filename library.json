@@ -1,0 +1,22 @@
+{
+  "name": "EEPstore",
+  "version": "1.0.2",
+  "description": "EEPROM data storage with CRC16 checksum",
+  "keywords": "EEPROM, CRC, storage",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bimac/EEPstore.git"
+  },
+  "authors": [
+    {
+      "name": "Florian Rau",
+      "url": "https://github.com/bimac"
+    }
+  ],
+  "license": "LGPL-3.0",
+  "homepage": "https://github.com/bimac/EEPstore",
+  "dependencies": {},
+  "frameworks": "Arduino",
+  "platforms": "*",
+  "libLDFmode": "off"
+}
