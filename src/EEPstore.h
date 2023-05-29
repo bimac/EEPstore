@@ -22,6 +22,7 @@ version 1.0.0   initial release (thank you: Florian Uekermann)
 version 1.0.1   default address: 0
 version 1.0.2   reorganize, relicense & publish as library
 version 1.0.3   fix compatibility with Arduino registry
+version 1.0.4   separate methods: getIfValid & getOrSet
 
 _______________________________________________________________________________
 */
@@ -59,10 +60,10 @@ public:
     return valid;
   }
 
-  static inline bool getOrDefault(T &dataRef, const uint16_t address = 0) {
+  static inline bool getOrSet(T &dataRef, const uint16_t address = 0) {
     bool valid = getIfValid(dataRef, address);
     if (!valid) {
-      defaults(dataRef);
+      set(dataRef, address);
     }
     return valid;
   }
@@ -71,6 +72,4 @@ public:
     EEPstore<T> storage(dataRef);
     EEPROM.put(address, storage);
   }
-
-  static inline void defaults(T &dataRef) { new (&dataRef) T; }
 };
