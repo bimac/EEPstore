@@ -22,6 +22,7 @@ version 1.0.0   initial release (thank you: Florian Uekermann)
 version 1.0.1   default address: 0
 version 1.0.2   reorganize, relicense & publish as library
 version 1.0.3   fix compatibility with Arduino registry
+version 1.0.4   separate get() into getIfValid() & getOrSet()
 
 _______________________________________________________________________________
 */
@@ -37,7 +38,7 @@ template <class T> class EEPstore {
   EEPstore(const T &dataRef) : data(dataRef), crc(calcCRC()) {}
 
   uint16_t calcCRC() {
-    uint16_t out = 0;
+    uint16_t out         = 0;
     const uint8_t *bytes = (uint8_t *)&data;
     for (size_t i = 0; i < sizeof(T); i++) {
       out = _crc16_update(out, bytes[i]);
@@ -49,17 +50,25 @@ template <class T> class EEPstore {
   const uint16_t crc;
 
 public:
-  static void get(T &dataRef, const uint16_t address = 0) {
+  static inline bool getIfValid(T &dataRef, const uint16_t address = 0) {
     EEPstore<T> storage(dataRef);
     EEPROM.get(address, storage);
-    if (storage.crc == storage.calcCRC()) {
+    bool valid = storage.crc == storage.calcCRC();
+    if (valid) {
       dataRef = storage.data;
-    } else {
-      EEPstore<T>::set(dataRef, address);
     }
+    return valid;
   }
 
-  static void set(const T &dataRef, const uint16_t address = 0) {
+  static inline bool getOrSet(T &dataRef, const uint16_t address = 0) {
+    bool valid = getIfValid(dataRef, address);
+    if (!valid) {
+      set(dataRef, address);
+    }
+    return valid;
+  }
+
+  static inline void set(const T &dataRef, const uint16_t address = 0) {
     EEPstore<T> storage(dataRef);
     EEPROM.put(address, storage);
   }

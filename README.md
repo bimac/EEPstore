@@ -1,2 +1,2 @@
 # EEPstore
-EEPROM data storage with default values and CRC
+EEPROM data storage with CRC
